@@ -19,7 +19,11 @@ class DeployPipeline extends Pipeline {
     def initPhase() {
         script.stage("Prepare") {
             script.echo("Hello, world")
-            script.echo("The value of foo is : ${GlobalVars.name}")
+            script.echo("The value of GlobalVars is : ${GlobalVars.name}")
+            sayHello 'Job 0'
+        }
+        script.stage("New") {
+            script.echo("The value of GlobalVars is : ${GlobalVars.name}")
             sayHello 'Job 0'
         }
     }
