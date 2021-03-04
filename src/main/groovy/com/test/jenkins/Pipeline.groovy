@@ -9,7 +9,7 @@ abstract class Pipeline implements Serializable {
         construct(script)
     }
 
-    private static Pipeline construct(Script script, Map config, Map constants) {
+    private static Pipeline construct(Script script) {
         // resolve pipeline type
         script.echo("pipeline type: Test")
     }
