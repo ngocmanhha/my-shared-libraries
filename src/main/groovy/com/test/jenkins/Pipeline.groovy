@@ -6,7 +6,12 @@ abstract class Pipeline implements Serializable {
         this.script = script
     }
     static Pipeline resolve(Script script) {
-        this.script = script
+        construct(script)
+    }
+
+    private static Pipeline construct(Script script, Map config, Map constants) {
+        // resolve pipeline type
+        script.echo("pipeline type: Test")
     }
     abstract void run();
 }
