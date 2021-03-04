@@ -1,6 +1,7 @@
 package com.test.jenkins
 
 import groovy.transform.InheritConstructors
+import com.cloudbees.groovy.cps.NonCPS
 
 @InheritConstructors
 class DeployPipeline extends Pipeline {
@@ -12,6 +13,7 @@ class DeployPipeline extends Pipeline {
         initPhase()
     }
 
+    @NonCPS
     def initPhase() {
         script.stage("Prepare") {
             script.echo("Hello, world")
