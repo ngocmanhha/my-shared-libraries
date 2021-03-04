@@ -31,12 +31,16 @@ class DeployPipeline extends Pipeline {
 //                test4: script.echo("4")
 //            }
             test['test1'] = {
-                script.echo("1")
-                script.echo("2")
+                check1: {
+                    script.echo("1")
+                    script.echo("2")
+                }
             }
             test['test2'] = {
-                script.echo("3")
-                script.echo("4")
+                check2: {
+                    script.echo("3")
+                    script.echo("4")
+                }
             }
             script.parallel(test)
         }
