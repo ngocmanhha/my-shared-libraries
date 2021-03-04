@@ -13,5 +13,15 @@ abstract class Pipeline implements Serializable {
         // resolve pipeline type
         script.echo("pipeline type: Test")
     }
+
+    protected void withTestFailureHandling(Closure action) {
+        try {
+            action.call()
+        } catch (Exception e) {
+            // abort the pipeline without throwing an exception
+            return
+        }
+    }
+
     abstract void run();
 }

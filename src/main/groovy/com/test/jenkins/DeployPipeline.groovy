@@ -10,7 +10,9 @@ class DeployPipeline extends Pipeline {
     }
     @Override
     void run() {
-        initPhase()
+        withTestFailureHandling {
+            initPhase()
+        }
     }
 
     @NonCPS
