@@ -39,13 +39,23 @@ class DeployPipeline extends Pipeline {
 //            test["test1"] = {
 //                arr1.forEach({ item -> script.echo("${item}") })
 //            }
+//            test["case1"] = {
+//                script.stage("test1") {
+//                    script.echo("1")
+//                    script.echo("2")
+//                }
+//            }
+//            test["case2"] = {
+//                script.stage("test2") {
+//                    script.echo("3")
+//                    script.echo("4")
+//                }
+//            }
             test["case1"] = {
                 script.stage("test1") {
                     script.echo("1")
                     script.echo("2")
                 }
-            }
-            test["case2"] = {
                 script.stage("test2") {
                     script.echo("3")
                     script.echo("4")
