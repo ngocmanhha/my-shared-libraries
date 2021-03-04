@@ -12,6 +12,7 @@ abstract class Pipeline implements Serializable {
     private static Pipeline construct(Script script) {
         // resolve pipeline type
         script.echo("pipeline type: Test")
+        return new DeployPipeline(script);
     }
 
     protected void withTestFailureHandling(Closure action) {
