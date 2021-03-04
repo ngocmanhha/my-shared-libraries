@@ -21,13 +21,17 @@ class DeployPipeline extends Pipeline {
         script.stage("Prepare") {
             script.echo("Hello, world")
             script.echo("The value of GlobalVars is : ${GlobalVars.name}")
+            script.parallel(test: {
+                test1: script.echo("1")
+                test2: script.sh("echo 2")
+            })
         }
     }
     @NonCPS
     def nextPhase() {
         script.stage("Next") {
             script.echo("The value of GlobalVars is : ${GlobalVars.name}")
-            sayHello 'Job 1'
+//            sayHello 'Job 1'
         }
     }
 }
