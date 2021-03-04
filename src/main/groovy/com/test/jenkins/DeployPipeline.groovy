@@ -12,6 +12,7 @@ class DeployPipeline extends Pipeline {
     void run() {
         withTestFailureHandling {
             initPhase()
+            nextPhase()
         }
     }
 
@@ -22,9 +23,12 @@ class DeployPipeline extends Pipeline {
             script.echo("The value of GlobalVars is : ${GlobalVars.name}")
             sayHello 'Job 0'
         }
-        script.stage("New") {
+    }
+    @NonCPS
+    def nextPhase() {
+        script.stage("Next") {
             script.echo("The value of GlobalVars is : ${GlobalVars.name}")
-            sayHello 'Job 0'
+            sayHello 'Job 1'
         }
     }
 }
