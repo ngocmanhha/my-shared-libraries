@@ -17,7 +17,7 @@ class DeployPipeline extends Pipeline {
     }
 
     @NonCPS
-    def initPhase() {
+    Void initPhase() {
         script.stage("Prepare") {
             script.echo("Hello, world")
             script.echo("The value of GlobalVars is : ${GlobalVars.name}")
@@ -34,36 +34,39 @@ class DeployPipeline extends Pipeline {
 //                arr1.forEach({ item -> script.echo("${item}") })
 //            }
 
+
+//            test["case1"] = {
+//                script.steps("Test") {
+//                    script.stage("test1") {
+//                        script.echo("1")
+//                        script.echo("2")
+//                    }
+//                    script.stage("test2") {
+//                        script.echo("3")
+//                        script.echo("4")
+//                    }
+//                }
+//            }
+
             test["case1"] = {
-                script.stages("Test") {
-                    script.stage("test1") {
-                        script.echo("1")
-                        script.echo("2")
-                    }
-                    script.stage("test2") {
-                        script.echo("3")
-                        script.echo("4")
-                    }
+                script.stage("test1") {
+                    script.steps()
+                    script.echo("1")
+                    script.echo("2")
+                }
+            }
+            test["case2"] = {
+                script.stage("test2") {
+                    script.echo("3")
+                    script.echo("4")
                 }
             }
 
-//            test["case1"] = {
-//                script.stage("test1") {
-//                    script.echo("1")
-//                    script.echo("2")
-//                }
-//            }
-//            test["case2"] = {
-//                script.stage("test2") {
-//                    script.echo("3")
-//                    script.echo("4")
-//                }
-//            }
             script.parallel(test)
         }
     }
     @NonCPS
-    def nextPhase() {
+    Void nextPhase() {
         script.stage("Next") {
             script.echo("You are welcome!")
         }
