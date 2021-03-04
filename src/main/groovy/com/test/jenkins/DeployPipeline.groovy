@@ -22,13 +22,21 @@ class DeployPipeline extends Pipeline {
             script.echo("Hello, world")
             script.echo("The value of GlobalVars is : ${GlobalVars.name}")
             Map test = [:]
+//            test['test1'] = {
+//                test1: script.echo("1")
+//                test2: script.echo("2")
+//            }
+//            test['test2'] = {
+//                test3: script.echo("3")
+//                test4: script.echo("4")
+//            }
             test['test1'] = {
-                test1: script.echo("1")
-                test2: script.echo("2")
+                script.echo("1")
+                script.echo("2")
             }
             test['test2'] = {
-                test3: script.echo("3")
-                test4: script.echo("4")
+                script.echo("3")
+                script.echo("4")
             }
             script.parallel(test)
         }
