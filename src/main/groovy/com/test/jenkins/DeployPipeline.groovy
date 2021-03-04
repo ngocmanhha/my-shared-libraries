@@ -36,17 +36,20 @@ class DeployPipeline extends Pipeline {
             List<String> arr2 = new ArrayList<>();
             arr1.add("3");
             arr1.add("4");
-            test["test1"] = {
-                arr1.forEach({ item -> script.echo("${item}") })
+//            test["test1"] = {
+//                arr1.forEach({ item -> script.echo("${item}") })
+//            }
+            test["case1"] = {
+                script.state("test1") {
+                    script.echo("1")
+                    script.echo("2")
+                }
             }
-            test["test2"] = {
-                script.echo("2")
-            }
-            test["test3"] = {
-                script.echo("3")
-            }
-            test["test4"] = {
-                script.echo("4")
+            test["case2"] = {
+                script.state("test2") {
+                    script.echo("3")
+                    script.echo("4")
+                }
             }
             script.parallel(test)
         }
