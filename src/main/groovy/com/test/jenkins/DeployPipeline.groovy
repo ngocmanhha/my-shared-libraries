@@ -21,7 +21,7 @@ class DeployPipeline extends Pipeline {
         script.stage("Prepare") {
             script.echo("Hello, world")
             script.echo("The value of GlobalVars is : ${GlobalVars.name}")
-            Map test = [:]
+            Map test = []
 //            test['test1'] = {
 //                test1: script.echo("1")
 //                test2: script.echo("2")
