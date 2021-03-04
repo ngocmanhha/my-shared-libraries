@@ -4,6 +4,9 @@ import groovy.transform.InheritConstructors
 
 @InheritConstructors
 class DeployPipeline extends Pipeline {
+    DeployPipeline(Script script) {
+        super(script)
+    }
     @Override
     void run() {
         initPhase()
@@ -11,8 +14,8 @@ class DeployPipeline extends Pipeline {
 
     def initPhase() {
         script.stage("Prepare") {
-            script.sh("Hello, world")
-            script.sh("The value of foo is : ${GlobalVars.name}")
+            script.echo("Hello, world")
+            script.echo("The value of foo is : ${GlobalVars.name}")
             sayHello 'Job 0'
         }
     }

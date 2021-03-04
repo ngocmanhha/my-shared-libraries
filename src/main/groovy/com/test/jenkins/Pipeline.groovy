@@ -5,5 +5,8 @@ abstract class Pipeline implements Serializable {
     Pipeline(Script script) {
         this.script = script
     }
+    Pipeline resolve(Script script) {
+        this.script = script
+    }
     abstract void run();
 }
