@@ -50,7 +50,6 @@ class DeployPipeline extends Pipeline {
 
             test["case1"] = {
                 script.stage("test1") {
-                    script.steps()
                     script.echo("1")
                     script.echo("2")
                 }
