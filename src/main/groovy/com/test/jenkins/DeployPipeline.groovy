@@ -27,10 +27,10 @@ class DeployPipeline extends Pipeline {
 //                test2: script.node() {
 //                    script.sh("echo 2")
 //                }
-            },
-            test2: {
-                test1: script.echo("1")
-                test2: script.echo("2")
+            })
+            script.parallel(test2: {
+                test3: script.echo("3")
+                test4: script.echo("4")
 //                test2: script.node() {
 //                    script.sh("echo 2")
 //                }
