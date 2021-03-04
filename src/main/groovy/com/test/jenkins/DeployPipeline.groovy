@@ -23,9 +23,10 @@ class DeployPipeline extends Pipeline {
             script.echo("The value of GlobalVars is : ${GlobalVars.name}")
             script.parallel(test: {
                 test1: script.echo("1")
-                test2: script.node() {
-                    script.sh("echo 2")
-                }
+                test2: script.echo("2")
+//                test2: script.node() {
+//                    script.sh("echo 2")
+//                }
             })
         }
     }
