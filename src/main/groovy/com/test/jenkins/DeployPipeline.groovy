@@ -48,7 +48,7 @@ class DeployPipeline extends Pipeline {
             test["test4"] = {
                 script.echo("4")
             }
-            script.parallel(test)
+            script.parallel({ test })
         }
     }
     @NonCPS
