@@ -37,7 +37,7 @@ class DeployPipeline extends Pipeline {
             arr1.add("3");
             arr1.add("4");
             test["test1"] = {
-                script.echo("1")
+                arr1.forEach({ item -> script.echo("${item}") })
             }
             test["test2"] = {
                 script.echo("2")
@@ -48,14 +48,13 @@ class DeployPipeline extends Pipeline {
             test["test4"] = {
                 script.echo("4")
             }
-            script.parallel({ test })
+            script.parallel(test)
         }
     }
     @NonCPS
     def nextPhase() {
         script.stage("Next") {
-            script.echo("The value of GlobalVars is : ${GlobalVars.name} - End.")
-//            sayHello 'Job 1'
+            script.echo("You are welcome!")
         }
     }
 }
