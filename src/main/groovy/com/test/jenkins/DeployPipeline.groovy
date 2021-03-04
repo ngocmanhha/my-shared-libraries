@@ -30,17 +30,23 @@ class DeployPipeline extends Pipeline {
 //                test3: script.echo("3")
 //                test4: script.echo("4")
 //            }
-            test['test1'] = {
-                check1: {
-                    script.echo("1")
-                    script.echo("2")
-                }
+            List<String> arr1 = new ArrayList<>();
+            arr1.add("1");
+            arr1.add("2");
+            List<String> arr2 = new ArrayList<>();
+            arr1.add("3");
+            arr1.add("4");
+            test["test1"] = {
+                script.echo("1")
             }
-            test['test2'] = {
-                check2: {
-                    script.echo("3")
-                    script.echo("4")
-                }
+            test["test2"] = {
+                script.echo("2")
+            }
+            test["test3"] = {
+                script.echo("3")
+            }
+            test["test4"] = {
+                script.echo("4")
             }
             script.parallel(test)
         }
