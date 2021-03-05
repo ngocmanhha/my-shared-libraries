@@ -56,7 +56,7 @@ class DeployPipeline extends Pipeline {
         }
     }
 
-    @NonCPS
+//    @NonCPS
     def displayInfo(List arr) {
         arr.forEach({ item -> script.echo(item) })
     }
