@@ -20,6 +20,7 @@ abstract class Pipeline implements Serializable {
             action.call()
         } catch (Exception e) {
             // abort the pipeline without throwing an exception
+            script.print(e.getMessage());
             return
         }
     }
