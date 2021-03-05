@@ -8,52 +8,72 @@ class DeployPipeline extends Pipeline {
     DeployPipeline(Script script) {
         super(script)
     }
+
     @Override
     void run() {
         withTestFailureHandling {
             initPhase()
+            testPhase()
+            buildPhase()
+            deployPhase()
             nextPhase()
         }
     }
 
-//    @NonCPS
     def initPhase() {
         script.stage("Prepare") {
             script.echo("Hello, world")
             script.echo("The value of GlobalVars is : ${GlobalVars.name}")
+        }
+    }
+
+    def testPhase() {
+        script.stage("Test") {
             def test = [:]
-            test['test1'] = {
-                script.echo("1")
-                script.echo("2")
+            test["test-1"] = {
+                script.stage("test1") {
+                    script.echo("1")
+                    script.echo("2")
+                }
             }
-            test['test2'] = {
-                script.echo("3")
-                script.echo("4")
+            test["test-2"] = {
+                script.stage("test2") {
+                    script.echo("3")
+                    script.echo("4")
+                }
             }
 
-//            test["case-1"] = {
-//                script.stage("test1") {
-//                    script.echo("1")
-//                    script.echo("2")
-//                }
-//            }
-//            test["case-2"] = {
-//                script.stage("test2") {
-//                    script.echo("3")
-//                    script.echo("4")
-//                }
-//            }
-
-//            ["1", "2", "3", "4"].each {item ->
-//                test["case-${item}"] = {
-//                    displayInfo(["${item}"])
-//                }
-//            }
             script.parallel(test)
         }
     }
 
-//    @NonCPS
+    def buildPhase() {
+        script.stage("Build") {
+            def test = [:]
+            ["1", "2", "3", "4"].each {item ->
+                test["build-${item}"] = {
+                    displayInfo(["${item}"])
+                }
+            }
+            script.parallel(test)
+        }
+    }
+
+    def deployPhase() {
+        script.stage('Deploy') {
+            def test = [:]
+            test['deploy-1'] = {
+                script.echo("1")
+                script.echo("2")
+            }
+            test['deploy-2'] = {
+                script.echo("3")
+                script.echo("4")
+            }
+            script.parallel(test)
+        }
+    }
+
     def displayInfo(List arr) {
         arr.each { item -> script.echo(item) }
     }
