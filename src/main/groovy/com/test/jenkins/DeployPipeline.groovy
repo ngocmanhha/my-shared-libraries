@@ -16,7 +16,7 @@ class DeployPipeline extends Pipeline {
         }
     }
 
-    @NonCPS
+//    @NonCPS
     Void initPhase() {
         script.stage("Prepare") {
             script.echo("Hello, world")
@@ -47,18 +47,12 @@ class DeployPipeline extends Pipeline {
 //                    }
 //                }
 //            }
-            try {
-                ["1", "2", "3", "4"].each {item ->
-
-                    test["case-${item}"] = {
-                        displayInfo(["${item}"])
-                    }
+            ["1", "2", "3", "4"].each {item ->
+                test["case-${item}"] = {
+                    displayInfo(["${item}"])
                 }
-                script.parallel(test)
             }
-            catch (Exception exp) {
-                throw exp;
-            }
+            script.parallel(test)
         }
     }
 
