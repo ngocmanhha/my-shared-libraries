@@ -48,13 +48,13 @@ class DeployPipeline extends Pipeline {
 //                }
 //            }
 
-            test["case1"] = {
+            test["case1"] = { ->
                 script.stage("test1") {
                     script.echo("1")
                     script.echo("2")
                 }
             }
-            test["case2"] = {
+            test["case2"] = { ->
                 script.stage("test2") {
                     script.echo("3")
                     script.echo("4")
