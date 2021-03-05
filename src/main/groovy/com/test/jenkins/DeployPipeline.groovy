@@ -35,23 +35,23 @@ class DeployPipeline extends Pipeline {
 //            }
 
 
-//            test["case1"] = {
-//                script.steps("Test") {
-//                    script.stage("test1") {
-//                        script.echo("1")
-//                        script.echo("2")
-//                    }
-//                    script.stage("test2") {
-//                        script.echo("3")
-//                        script.echo("4")
-//                    }
-//                }
-//            }
-            ["1", "2", "3", "4"].each {item ->
-                test["case-${item}"] = {
-                    displayInfo(["${item}"])
+            test["case-1"] = {
+                script.stage("test1") {
+                    script.echo("1")
+                    script.echo("2")
                 }
             }
+            test["case-2"] = {
+                script.stage("test2") {
+                    script.echo("3")
+                    script.echo("4")
+                }
+            }
+//            ["1", "2", "3", "4"].each {item ->
+//                test["case-${item}"] = {
+//                    displayInfo(["${item}"])
+//                }
+//            }
             script.parallel(test)
         }
     }
