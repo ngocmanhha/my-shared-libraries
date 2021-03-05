@@ -24,7 +24,9 @@ class DeployPipeline extends Pipeline {
         script.stage("Prepare") {
             script.echo("Hello, world")
             script.echo("The value of GlobalVars is : ${GlobalVars.name}")
-            Map scmVars = script.checkout(script.scm)
+            script.node('master') {
+                Map scmVars = script.checkout(script.scm)
+            }
         }
     }
 
