@@ -49,12 +49,10 @@ class DeployPipeline extends Pipeline {
 //            }
             try {
                 ["1", "2", "3", "4"].each {item ->
+
                     test["case-${item}"] = {
                         displayInfo(["${item}"])
                     }
-//                    test["case-${}"] = {
-//                        displayInfo(["3", "4"])
-//                    }
                 }
                 script.parallel(test)
             }
@@ -67,6 +65,7 @@ class DeployPipeline extends Pipeline {
 //    @NonCPS
     def displayInfo(List arr) {
         arr.each{ item -> script.echo(item) }
+        return null
     }
 
     @NonCPS
