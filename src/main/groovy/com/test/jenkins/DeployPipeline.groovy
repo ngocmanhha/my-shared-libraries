@@ -80,7 +80,7 @@ class DeployPipeline extends Pipeline {
 
     @NonCPS
     def nextPhase() {
-        script.stage("Next") {
+        script.stage("Finish") {
             script.echo("You are welcome!")
         }
     }

@@ -1,6 +1,6 @@
 package com.test.jenkins
 
-class TestAction implements Action{
+class TestAction implements Action {
     String name
     void execute(Script script) {
 
