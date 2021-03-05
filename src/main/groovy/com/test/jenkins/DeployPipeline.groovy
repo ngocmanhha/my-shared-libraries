@@ -16,8 +16,8 @@ class DeployPipeline extends Pipeline {
         }
     }
 
-    @NonCPS
-    Void initPhase() {
+//    @NonCPS
+    def initPhase() {
         script.stage("Prepare") {
             script.echo("Hello, world")
             script.echo("The value of GlobalVars is : ${GlobalVars.name}")
@@ -63,7 +63,7 @@ class DeployPipeline extends Pipeline {
     }
 
     @NonCPS
-    Void nextPhase() {
+    def nextPhase() {
         script.stage("Next") {
             script.echo("You are welcome!")
         }
