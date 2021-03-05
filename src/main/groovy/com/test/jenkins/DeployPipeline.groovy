@@ -48,11 +48,13 @@ class DeployPipeline extends Pipeline {
 //                }
 //            }
             try {
-                test["case1"] = {
-                    displayInfo(["1", "2"])
-                }
-                test["case2"] = {
-                    displayInfo(["3", "4"])
+                ["a", "b", "c", "d"].each {
+                    test["case-${a}"] = {
+                        displayInfo(["1", "2"])
+                    }
+                    test["case-${b}"] = {
+                        displayInfo(["3", "4"])
+                    }
                 }
                 script.parallel(test)
             }
