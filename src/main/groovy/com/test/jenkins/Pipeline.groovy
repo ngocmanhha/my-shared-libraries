@@ -11,7 +11,7 @@ abstract class Pipeline implements Serializable {
 
     private static Pipeline construct(Script script) {
         // resolve pipeline type
-        script.echo("pipeline type: Test")
+        script.echo("Pipeline type")
         return new DeployPipeline(script);
     }
 
@@ -21,7 +21,7 @@ abstract class Pipeline implements Serializable {
         } catch (Exception e) {
             // abort the pipeline without throwing an exception
             script.print(e.getMessage());
-            return
+            throw e;
         }
     }
 
