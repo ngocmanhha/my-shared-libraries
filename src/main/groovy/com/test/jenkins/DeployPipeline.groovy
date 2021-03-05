@@ -47,18 +47,18 @@ class DeployPipeline extends Pipeline {
 //                    }
 //                }
 //            }
-            ["1", "2", "3", "4"].forEach({item ->
+            ["1", "2", "3", "4"].each {item ->
                 test["case-${item}"] = {
                     displayInfo(["${item}"])
                 }
-            })
+            }
             script.parallel(test)
         }
     }
 
 //    @NonCPS
     def displayInfo(List arr) {
-        arr.forEach({ item -> script.echo(item) })
+        arr.each { item -> script.echo(item) }
     }
 
     @NonCPS
