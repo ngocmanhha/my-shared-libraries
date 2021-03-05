@@ -55,8 +55,20 @@ class DeployPipeline extends Pipeline {
                     displayInfo(["${item}"])
                 }
             }
+            test["build-image"] = {
+                buildDockerImage()
+            }
             script.parallel(test)
         }
+    }
+
+    def buildDockerImage() {
+        def dockerfilePath = "Dockerfile"
+        def context = "."
+        script.docker.build(
+                "rest-api:1.0.0",
+                " -f ${dockerfilePath} ${context}"
+        )
     }
 
     def deployPhase() {
