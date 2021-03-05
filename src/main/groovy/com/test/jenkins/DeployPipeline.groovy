@@ -47,19 +47,25 @@ class DeployPipeline extends Pipeline {
 //                    }
 //                }
 //            }
-                test = {
-                    script.stage("test1") {
-                        script.echo("1")
-                        script.echo("2")
-                    }
-                    script.stage("test2") {
-                        script.echo("3")
-                        script.echo("4")
-                    }
+            try {
+                test["case1"] = {
+                    displayInfo(["1", "2"] as List)
+                }
+                test["case2"] = {
+                    displayInfo(["3", "4"] as List)
                 }
                 script.parallel(test)
+            }
+            catch (Exception exp) {
+                throw exp;
+            }
         }
     }
+
+    def displayInfo(List arr) {
+        arr.forEach({ item -> script.echo(item) })
+    }
+
     @NonCPS
     Void nextPhase() {
         script.stage("Next") {
