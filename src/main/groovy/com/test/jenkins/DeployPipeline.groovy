@@ -2,7 +2,6 @@ package com.test.jenkins
 
 import groovy.transform.InheritConstructors
 import com.cloudbees.groovy.cps.NonCPS
-import com.test.jenkins.GlobalVars
 
 @InheritConstructors
 class DeployPipeline extends Pipeline {
@@ -89,7 +88,7 @@ class DeployPipeline extends Pipeline {
 
     void removeImageFromLocal(String fullImageName) {
         def imageId = script.sh(
-                script: "docker images -q ${image.fullImageName()}",
+                script: "docker images -q ${fullImageName()}",
                 returnStdout: true).trim()
         script.sh(script: "docker rmi --force ${imageId}")
     }
