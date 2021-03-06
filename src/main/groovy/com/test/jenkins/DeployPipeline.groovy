@@ -76,6 +76,7 @@ class DeployPipeline extends Pipeline {
                     "${originalImageName}",
                     " -f ${dockerfilePath} ${context}"
             )
+            println(buildResult.toString())
             tagAndPushImage(originalImageName, newImageName)
             removeImageFromLocal(newImageName)
         }
@@ -88,8 +89,9 @@ class DeployPipeline extends Pipeline {
 
     void removeImageFromLocal(String fullImageName) {
         def imageId = script.sh(
-                script: "docker images -q ${fullImageName()}",
-                returnStdout: true).trim()
+                script: "docker images -q ${fullImageName}",
+                returnStdout: true
+        ).trim()
         script.sh(script: "docker rmi --force ${imageId}")
     }
 
