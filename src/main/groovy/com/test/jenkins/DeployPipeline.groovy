@@ -2,6 +2,7 @@ package com.test.jenkins
 
 import groovy.transform.InheritConstructors
 import com.cloudbees.groovy.cps.NonCPS
+import com.test.jenkins.GlobalVars
 
 @InheritConstructors
 class DeployPipeline extends Pipeline {
@@ -69,11 +70,28 @@ class DeployPipeline extends Pipeline {
         script.node('master') {
             def dockerfilePath = "Dockerfile"
             def context = "."
-            script.docker.build(
-                    "rest-api:1.0.0",
+            def version = "1.0.0"
+            def originalImageName = "rest-api:${version}"
+            def newImageName = "${GlobalVars.repository}/${GlobalVars.username}/${GlobalVars.group}/${originalImageName}"
+            def buildResult = script.docker.build(
+                    "${originalImageName}",
                     " -f ${dockerfilePath} ${context}"
             )
+            tagAndPushImage(originalImageName, newImageName)
+            removeImageFromLocal(newImageName)
         }
+    }
+
+    void tagAndPushImage(String originalImageName, String newImageName) {
+        script.sh(script: "docker tag ${originalImageName} ${newImageName}")
+        script.sh(script: "docker push ${newImageName}")
+    }
+
+    void removeImageFromLocal(String fullImageName) {
+        def imageId = script.sh(
+                script: "docker images -q ${image.fullImageName()}",
+                returnStdout: true).trim()
+        script.sh(script: "docker rmi --force ${imageId}")
     }
 
     def deployPhase() {
