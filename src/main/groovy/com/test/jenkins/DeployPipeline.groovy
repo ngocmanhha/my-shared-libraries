@@ -10,8 +10,9 @@ class DeployPipeline extends Pipeline {
             pipeline: [
                 build: [
                     timeout: [
-                        time: 1,
-                        unit: 'MILLISECONDS'
+                        time: 10,
+                        unit: 'MINUTES'
+//                        unit: 'MILLISECONDS'
                     ]
                 ]
             ]
@@ -35,6 +36,9 @@ class DeployPipeline extends Pipeline {
 
     def initPhase() {
         script.stage("Prepare") {
+            script.retry(count: 3) {
+                script.echo(a)
+            }
             script.echo("Hello, world")
             script.echo("The value of GlobalVars is : ${GlobalVars.name}")
             script.node('master') {
