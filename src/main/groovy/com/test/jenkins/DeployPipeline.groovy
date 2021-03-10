@@ -109,22 +109,17 @@ class DeployPipeline extends Pipeline {
     }
 
     def deployPhase() {
-        script.timeout(
-                time: config.constants.pipeline.build.timeout.time,
-                unit: config.constants.pipeline.build.timeout.unit
-        ) {
-            script.stage('Deploy') {
-                def test = [:]
-                test['deploy-1'] = {
-                    script.echo("1")
-                    script.echo("2")
-                }
-                test['deploy-2'] = {
-                    script.echo("3")
-                    script.echo("4")
-                }
-                script.parallel(test)
+        script.stage('Deploy') {
+            def test = [:]
+            test['deploy-1'] = {
+                script.echo("1")
+                script.echo("2")
             }
+            test['deploy-2'] = {
+                script.echo("3")
+                script.echo("4")
+            }
+            script.parallel(test)
         }
     }
 

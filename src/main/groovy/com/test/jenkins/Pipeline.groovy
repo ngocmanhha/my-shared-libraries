@@ -17,7 +17,12 @@ abstract class Pipeline implements Serializable {
 
     protected void withTestFailureHandling(Closure action) {
         try {
-            action.call()
+            script.timeout(
+                    time: config.constants.pipeline.build.timeout.time,
+                    unit: config.constants.pipeline.build.timeout.unit
+            ) {
+                action.call()
+            }
         } catch (Exception e) {
             // abort the pipeline without throwing an exception
             script.print(e.getMessage());
