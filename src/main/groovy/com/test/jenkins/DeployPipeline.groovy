@@ -11,7 +11,7 @@ class DeployPipeline extends Pipeline {
                 build: [
                     timeout: [
                         time: 1,
-                        unit: UNIT.MILLISECONDS
+                        unit: 'MILLISECONDS'
                     ]
                 ]
             ]
