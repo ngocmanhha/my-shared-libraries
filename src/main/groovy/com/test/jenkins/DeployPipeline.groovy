@@ -5,6 +5,19 @@ import com.cloudbees.groovy.cps.NonCPS
 
 @InheritConstructors
 class DeployPipeline extends Pipeline {
+    private Map config = [
+        constants: [
+            pipeline: [
+                build: [
+                    timeout: [
+                        time: 1,
+                        unit: UNIT.MILLISECONDS
+                    ]
+                ]
+            ]
+        ]
+    ]
+
     DeployPipeline(Script script) {
         super(script)
     }
@@ -96,17 +109,22 @@ class DeployPipeline extends Pipeline {
     }
 
     def deployPhase() {
-        script.stage('Deploy') {
-            def test = [:]
-            test['deploy-1'] = {
-                script.echo("1")
-                script.echo("2")
+        script.timeout(
+                time: config.constants.pipeline.build.timeout.time,
+                unit: config.constants.pipeline.build.timeout.unit
+        ) {
+            script.stage('Deploy') {
+                def test = [:]
+                test['deploy-1'] = {
+                    script.echo("1")
+                    script.echo("2")
+                }
+                test['deploy-2'] = {
+                    script.echo("3")
+                    script.echo("4")
+                }
+                script.parallel(test)
             }
-            test['deploy-2'] = {
-                script.echo("3")
-                script.echo("4")
-            }
-            script.parallel(test)
         }
     }
 
