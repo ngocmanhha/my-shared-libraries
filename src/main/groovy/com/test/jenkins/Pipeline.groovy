@@ -6,12 +6,12 @@ abstract class Pipeline implements Serializable {
         constants: [
             pipeline: [
                 build: [
-//                        timeout: [:]
-                    timeout: [
-                        time: 10,
-//                        unit: 'MINUTES'
-//                        unit: 'MILLISECONDS'
-                    ]
+                        timeout: [:]
+//                    timeout: [
+//                        time: 10,
+////                        unit: 'MINUTES'
+////                        unit: 'MILLISECONDS'
+//                    ]
                 ]
             ]
         ]
@@ -48,8 +48,6 @@ abstract class Pipeline implements Serializable {
 
     protected def startPipeline(Map timeout, Closure act) {
         if (!timeout?.time) {
-//            script.println("Missing time config")
-//            return
             act.call()
         }
         if (timeout?.unit) {
@@ -61,15 +59,9 @@ abstract class Pipeline implements Serializable {
                     act.call()
                 }
             }
-            else {
-                script.println("Timeout unit is not match any in ${TimeoutUnit.values().toString()}");
-                return
-            }
+            else throw new Exception("Timeout unit is not match any in ${TimeoutUnit.values().toString()}")
         }
-        else {
-            script.println("Missing unit config")
-            return
-        }
+        else throw new Exception("Missing unit config")
     }
 
     protected def validateUnit(String timeoutUnit) {
