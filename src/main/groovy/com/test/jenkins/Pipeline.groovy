@@ -6,12 +6,12 @@ abstract class Pipeline implements Serializable {
         constants: [
             pipeline: [
                 build: [
-                        timeout: [:]
-//                    timeout: [
-//                        time: 10,
+//                        timeout: [:]
+                    timeout: [
+                        time: 10,
 //                        unit: 'MINUTES'
-////                        unit: 'MILLISECONDS'
-//                    ]
+//                        unit: 'MILLISECONDS'
+                    ]
                 ]
             ]
         ]
