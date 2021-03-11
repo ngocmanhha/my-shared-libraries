@@ -31,8 +31,8 @@ class DeployPipeline extends Pipeline {
             script.node('master') {
                 def configFile = ".jenkins-ci.yaml"
                 Map scmVars = script.checkout(script.scm)
-                Map constants = script.readYaml(text: script.readFile(file: configFile))
-                println(constants.toString())
+                Map configs = script.readYaml(text: script.readFile(file: configFile))
+                script.echo("Loaded config yaml: ${configs}")
             }
         }
     }
