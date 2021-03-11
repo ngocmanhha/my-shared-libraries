@@ -27,6 +27,10 @@ abstract class Pipeline implements Serializable {
     }
 
     static Pipeline resolve(Script script, Map config) {
+        def configFile = ".jenkins-ci.yaml"
+        Map configs = script.readYaml(text: script.readFile(file: configFile))
+        script.echo("Loaded config yaml: ${configs}")
+        this.config.constants.pipeline = configs;
         construct(script, config)
     }
 
