@@ -3,18 +3,34 @@ package com.test.jenkins
 abstract class Pipeline implements Serializable {
     Script script
     Map config
+
     Pipeline(Script script, Map config) {
         this.script = script
         this.config = config;
     }
+
+    Pipeline(Script script) {
+        this.script = script
+    }
+
     static Pipeline resolve(Script script, Map config) {
         construct(script, config)
+    }
+
+    static Pipeline resolve(Script script) {
+        construct(script)
     }
 
     private static Pipeline construct(Script script, Map config) {
         // resolve pipeline type
         script.echo("Pipeline type")
         return new DeployPipeline(script, config);
+    }
+
+    private static Pipeline construct(Script script) {
+        // resolve pipeline type
+        script.echo("Pipeline type")
+        return new DeployPipeline(script);
     }
 
     private void setTimeout(List timeout, Closure action) {
