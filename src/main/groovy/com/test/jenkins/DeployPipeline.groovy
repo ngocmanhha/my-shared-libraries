@@ -29,8 +29,9 @@ class DeployPipeline extends Pipeline {
             script.echo("Hello, world")
             script.echo("The value of GlobalVars is : ${GlobalVars.name}")
             script.node('master') {
+                def configFile = ".jenkins-ci.yaml"
                 Map scmVars = script.checkout(script.scm)
-                Map constants = script.readYaml(file: ".jenkins-ci.yaml")
+                Map constants = script.readYaml(text: script.readFile(file: configFile))
                 println(constants.toString())
             }
         }
