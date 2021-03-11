@@ -46,10 +46,11 @@ abstract class Pipeline implements Serializable {
         return new DeployPipeline(script);
     }
 
-    private def setTimeout(Map timeout, Closure action) {
+    private def startPipeline(Map timeout, Closure act) {
         if (!timeout?.time) {
-            script.println("Missing time config")
-            return
+//            script.println("Missing time config")
+//            return
+            act.call()
         }
         if (timeout?.unit) {
             if (validateUnit(timeout.unit)) {
@@ -57,7 +58,7 @@ abstract class Pipeline implements Serializable {
                         time: timeout.time,
                         unit: timeout.unit
                 ) {
-                    action.call()
+                    act.call()
                 }
             }
             else {
@@ -83,7 +84,7 @@ abstract class Pipeline implements Serializable {
 
     protected void withTestFailureHandling(Closure action) {
         try {
-            setTimeout(config.constants.pipeline.build.timeout as Map, action)
+            startPipeline(config.constants.pipeline.build.timeout, action)
         } catch (Exception e) {
             // abort the pipeline without throwing an exception
             script.print(e.getMessage());
