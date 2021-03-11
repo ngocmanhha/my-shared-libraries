@@ -5,19 +5,6 @@ import com.cloudbees.groovy.cps.NonCPS
 
 @InheritConstructors
 class DeployPipeline extends Pipeline {
-//    private Map config = [
-//        constants: [
-//            pipeline: [
-//                build: [
-////                    timeout: [
-////                        time: 10,
-////                        unit: 'MINUTES'
-//////                        unit: 'MILLISECONDS'
-////                    ]
-//                ]
-//            ]
-//        ]
-//    ]
 
     DeployPipeline(Script script, Map config) {
         super(script, config)

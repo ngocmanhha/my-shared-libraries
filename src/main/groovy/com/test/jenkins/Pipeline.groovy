@@ -2,7 +2,19 @@ package com.test.jenkins
 
 abstract class Pipeline implements Serializable {
     Script script
-    Map config
+    Map config = [
+        constants: [
+            pipeline: [
+                build: [
+//                    timeout: [
+//                        time: 10,
+//                        unit: 'MINUTES'
+////                        unit: 'MILLISECONDS'
+//                    ]
+                ]
+            ]
+        ]
+    ]
 
     Pipeline(Script script, Map config) {
         this.script = script
