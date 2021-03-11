@@ -9,11 +9,11 @@ class DeployPipeline extends Pipeline {
         constants: [
             pipeline: [
                 build: [
-                    timeout: [
-                        time: 10,
-                        unit: 'MINUTES'
-//                        unit: 'MILLISECONDS'
-                    ]
+//                    timeout: [
+//                        time: 10,
+//                        unit: 'MINUTES'
+////                        unit: 'MILLISECONDS'
+//                    ]
                 ]
             ]
         ]
