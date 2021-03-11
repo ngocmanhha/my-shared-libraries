@@ -23,9 +23,9 @@ class DeployPipeline extends Pipeline {
 
     def initPhase() {
         script.stage("Prepare") {
-            script.retry(count: 3) {
-                script.echo(a)
-            }
+//            script.retry(count: 3) {
+//                script.echo(a)
+//            }
             script.echo("Hello, world")
             script.echo("The value of GlobalVars is : ${GlobalVars.name}")
             script.node('master') {

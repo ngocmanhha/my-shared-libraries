@@ -72,7 +72,7 @@ abstract class Pipeline implements Serializable {
         }
     }
 
-    private def validateUnit(String timeoutUnit) {
+    protected def validateUnit(String timeoutUnit) {
         try {
             return TimeoutUnit.valueOf(timeoutUnit)
         }
