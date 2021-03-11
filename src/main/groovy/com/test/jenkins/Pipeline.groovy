@@ -19,8 +19,7 @@ abstract class Pipeline implements Serializable {
 
     Pipeline(Script script, Map config) {
         this.script = script
-        this.config = config;
-        script.echo("${config}")
+        this.config = config
     }
 
     Pipeline(Script script) {
