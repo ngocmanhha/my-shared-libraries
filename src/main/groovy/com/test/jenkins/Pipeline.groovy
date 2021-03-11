@@ -46,7 +46,7 @@ abstract class Pipeline implements Serializable {
         return new DeployPipeline(script);
     }
 
-    private def startPipeline(Map timeout, Closure act) {
+    private def startPipeline(Map timeout = [:], Closure act) {
         if (!timeout?.time) {
 //            script.println("Missing time config")
 //            return
