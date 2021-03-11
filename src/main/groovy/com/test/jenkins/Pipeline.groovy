@@ -45,7 +45,7 @@ abstract class Pipeline implements Serializable {
         return new DeployPipeline(script);
     }
 
-    private void setTimeout(List timeout, Closure action) {
+    private void setTimeout(Map timeout, Closure action) {
         if (!timeout?.time) {
             script.println("Missing time config")
             return
@@ -82,7 +82,7 @@ abstract class Pipeline implements Serializable {
 
     protected void withTestFailureHandling(Closure action) {
         try {
-            setTimeout(config.constants.pipeline.build.timeout, action)
+            setTimeout(config.constants.pipeline.build.timeout as Map, action)
         } catch (Exception e) {
             // abort the pipeline without throwing an exception
             script.print(e.getMessage());
