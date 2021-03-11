@@ -2,18 +2,19 @@ package com.test.jenkins
 
 abstract class Pipeline implements Serializable {
     Script script
-
-    Pipeline(Script script) {
+    Map config
+    Pipeline(Script script, Map config) {
         this.script = script
+        this.config = config;
     }
-    static Pipeline resolve(Script script) {
-        construct(script)
+    static Pipeline resolve(Script script, Map config) {
+        construct(script, config)
     }
 
-    private static Pipeline construct(Script script) {
+    private static Pipeline construct(Script script, Map config) {
         // resolve pipeline type
         script.echo("Pipeline type")
-        return new DeployPipeline(script);
+        return new DeployPipeline(script, config);
     }
 
     private void setTimeout(List timeout, Closure action) {
@@ -53,7 +54,7 @@ abstract class Pipeline implements Serializable {
 
     protected void withTestFailureHandling(Closure action) {
         try {
-            setTimeout(config.constants.pipeline.build.timeout as List, action)
+            setTimeout(config.constants.pipeline.build.timeout, action)
         } catch (Exception e) {
             // abort the pipeline without throwing an exception
             script.print(e.getMessage());
