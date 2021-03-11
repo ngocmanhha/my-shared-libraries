@@ -6,9 +6,12 @@ import com.cloudbees.groovy.cps.NonCPS
 @InheritConstructors
 class DeployPipeline extends Pipeline {
 
-    DeployPipeline(Script script, Map config) {
-        script.echo("${config.toString()}")
+    DeployPipeline(Script script) {
         super(script)
+    }
+
+    DeployPipeline(Script script, Map config) {
+        super(script, config)
     }
 
     @Override
