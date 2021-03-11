@@ -50,6 +50,7 @@ abstract class Pipeline implements Serializable {
         script.echo("${timeout.toString()}")
         if (!timeout?.time) {
             act.call()
+            return
         }
         if (timeout?.unit) {
             if (validateUnit(timeout.unit)) {
@@ -58,6 +59,7 @@ abstract class Pipeline implements Serializable {
                         unit: timeout.unit
                 ) {
                     act.call()
+                    return
                 }
             }
             else {
