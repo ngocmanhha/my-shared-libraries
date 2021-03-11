@@ -47,7 +47,7 @@ abstract class Pipeline implements Serializable {
     }
 
     protected def startPipeline(Map timeout, Closure act) {
-        script.echo(timeout)
+        script.echo("${timeout.toString()}")
         if (!timeout?.time) {
             act.call()
         }

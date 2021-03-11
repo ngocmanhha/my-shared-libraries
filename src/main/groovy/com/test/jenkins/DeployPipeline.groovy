@@ -6,13 +6,13 @@ import com.cloudbees.groovy.cps.NonCPS
 @InheritConstructors
 class DeployPipeline extends Pipeline {
 
-//    DeployPipeline(Script script) {
-//        super(script)
-//    }
-
-    DeployPipeline(Script script, Map config) {
-        super(script, config)
+    DeployPipeline(Script script) {
+        super(script)
     }
+
+//    DeployPipeline(Script script, Map config) {
+//        super(script, config)
+//    }
 
     @Override
     void run() {
