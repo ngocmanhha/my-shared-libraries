@@ -20,7 +20,6 @@ abstract class Pipeline implements Serializable {
     Pipeline(Script script, Map config) {
         this.script = script
         this.config = config;
-        script.echo(config.toString())
     }
 
     Pipeline(Script script) {
@@ -48,6 +47,7 @@ abstract class Pipeline implements Serializable {
     }
 
     protected def startPipeline(Map timeout, Closure act) {
+        script.echo(timeout)
         if (!timeout?.time) {
             act.call()
         }
@@ -60,9 +60,15 @@ abstract class Pipeline implements Serializable {
                     act.call()
                 }
             }
-            else throw new Exception("Timeout unit is not match any in ${TimeoutUnit.values().toString()}")
+            else {
+                throw new Exception("Timeout unit is not match any in ${TimeoutUnit.values().toString()}")
+                return
+            }
         }
-        else throw new Exception("Missing unit config")
+        else {
+            throw new Exception("Missing unit config")
+            return
+        }
     }
 
     protected def validateUnit(String timeoutUnit) {
@@ -78,7 +84,6 @@ abstract class Pipeline implements Serializable {
     protected void withTestFailureHandling(Closure action) {
         try {
             startPipeline(config.constants.pipeline.build.timeout, action)
-//            startPipeline(time: config.constants.pipeline.build.timeout?.time, unit: config.constants.pipeline.build.timeout?.unit, action)
         } catch (Exception e) {
             // abort the pipeline without throwing an exception
             script.print(e.getMessage());

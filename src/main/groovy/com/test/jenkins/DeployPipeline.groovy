@@ -7,7 +7,8 @@ import com.cloudbees.groovy.cps.NonCPS
 class DeployPipeline extends Pipeline {
 
     DeployPipeline(Script script, Map config) {
-        super(script, config)
+        script.echo("${config.toString()}")
+        super(script)
     }
 
     @Override
