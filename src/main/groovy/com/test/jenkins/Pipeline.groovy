@@ -6,6 +6,7 @@ abstract class Pipeline implements Serializable {
         constants: [
             pipeline: [
                 build: [
+                        timeout: [:]
 //                    timeout: [
 //                        time: 10,
 //                        unit: 'MINUTES'
@@ -82,7 +83,7 @@ abstract class Pipeline implements Serializable {
 
     protected void withTestFailureHandling(Closure action) {
         try {
-            setTimeout(config.constants.pipeline.build.timeout as Map, action)
+            setTimeout(config.constants.pipeline.build.timeout, action)
         } catch (Exception e) {
             // abort the pipeline without throwing an exception
             script.print(e.getMessage());
