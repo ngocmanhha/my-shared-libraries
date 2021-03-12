@@ -47,11 +47,12 @@ abstract class Pipeline implements Serializable {
             constants: prepareBuildVariables(script, configuration)
         ]
         Map timeout = configs.constants.pipeline.build.timeout
+        script.echo(configs.constants.pipeline.build.timeout)
         if (!timeout?.time) {
             return new DeployPipeline(script, config)
         }
         if (timeout?.unit) {
-            if (validateUnit(timeout.unit)) {
+            if (validateUnit(script, timeout.unit)) {
                 script.timeout(
                         time: timeout.time,
                         unit: timeout.unit
@@ -113,7 +114,7 @@ abstract class Pipeline implements Serializable {
 //        }
     }
 
-    protected def validateUnit(String timeoutUnit) {
+    private static def validateUnit(Script script, String timeoutUnit) {
         try {
             return TimeoutUnit.valueOf(timeoutUnit)
         }
