@@ -53,7 +53,6 @@ abstract class Pipeline implements Serializable {
         script.echo("Pipeline type")
         def timeout = script.constants.pipeline.build.timeout
         script.echo("${timeout.toString()}")
-        script.echo("${config.toString()}")
         return new DeployPipeline(script)
     }
 
