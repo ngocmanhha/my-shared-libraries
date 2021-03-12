@@ -42,20 +42,25 @@ abstract class Pipeline implements Serializable {
     private static Pipeline construct(Script script, Map config) {
         // resolve pipeline type
         script.echo("Pipeline type")
-        return new DeployPipeline(script, config);
+//        return new DeployPipeline(script, config)
+        return startPipeline(DeployPipeline.class)
     }
 
     private static Pipeline construct(Script script) {
         // resolve pipeline type
         script.echo("Pipeline type")
-        return new DeployPipeline(script);
+//        return new DeployPipeline(script, config)
+        return startPipeline(DeployPipeline.class)
     }
 
-    protected def startPipeline(Map timeout, Closure act) {
+    protected Pipeline startPipeline(Class<?> cls) {
+        cls = new Class<>(script);
+        def timeout = script.constants.pipeline.build.timeout
         script.echo("${timeout.toString()}")
+
         if (!timeout?.time) {
-            act.call()
-            return
+//            pipeline.run()
+            return (Pipeline)cls
         }
         if (timeout?.unit) {
             if (validateUnit(timeout.unit)) {
@@ -63,8 +68,8 @@ abstract class Pipeline implements Serializable {
                         time: timeout.time,
                         unit: timeout.unit
                 ) {
-                    act.call()
-                    return
+//                    pipeline.run()
+                    return (Pipeline)cls
                 }
             }
             else {
@@ -90,7 +95,7 @@ abstract class Pipeline implements Serializable {
 
     protected void withTestFailureHandling(Closure action) {
         try {
-            startPipeline(config.constants.pipeline.build.timeout, action)
+            action.run()
         } catch (Exception e) {
             // abort the pipeline without throwing an exception
             script.print(e.getMessage());
