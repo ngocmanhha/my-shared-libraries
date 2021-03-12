@@ -47,7 +47,7 @@ abstract class Pipeline implements Serializable {
             constants: prepareBuildVariables(script, configuration)
         ]
         Map timeout = configs.constants.pipeline.build.timeout
-        script.echo(configs.constants.pipeline.build.timeout)
+        script.echo("${configs.constants.pipeline.build.timeout}")
         if (!timeout?.time) {
             return new DeployPipeline(script, config)
         }
