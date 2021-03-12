@@ -45,7 +45,7 @@ abstract class Pipeline implements Serializable {
         Map configuration = [:]
 
         configuration.pipelineDefinition = config
-//        configuration.build = prepareBuildVariables(script, configuration)
+        configuration.build = prepareBuildVariables(script, configuration)
         return new DeployPipeline(script, configuration)
     }
 
