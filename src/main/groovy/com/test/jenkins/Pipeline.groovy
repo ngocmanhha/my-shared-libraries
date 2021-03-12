@@ -36,6 +36,11 @@ abstract class Pipeline implements Serializable {
     }
 
     static Pipeline resolve(Script script) {
+        def configFile = ".jenkins-ci.yaml"
+        Map configs = script.readYaml(text: script.readFile(file: configFile))
+        script.echo("Loaded config yaml: ${configs}")
+        this.config.constants.pipeline = configs
+        script.echo(this.config.toString())
         construct(script)
     }
 
@@ -51,7 +56,7 @@ abstract class Pipeline implements Serializable {
     private static Pipeline construct(Script script) {
         // resolve pipeline type
         script.echo("Pipeline type")
-        def timeout = script.constants.pipeline.build.timeout
+        def timeout = this.config.constants.pipeline.build.timeout
         script.echo("${timeout.toString()}")
         return new DeployPipeline(script)
     }
