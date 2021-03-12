@@ -42,18 +42,22 @@ abstract class Pipeline implements Serializable {
     private static Pipeline construct(Script script, Map config) {
         // resolve pipeline type
         script.echo("Pipeline type")
-//        return new DeployPipeline(script, config)
-        return startPipeline(DeployPipeline.class)
+        def timeout = script.constants.pipeline.build.timeout
+        script.echo("${timeout.toString()}")
+        script.echo("${config.toString()}")
+        return new DeployPipeline(script, config)
     }
 
     private static Pipeline construct(Script script) {
         // resolve pipeline type
         script.echo("Pipeline type")
-//        return new DeployPipeline(script, config)
-        return startPipeline(DeployPipeline.class)
+        def timeout = script.constants.pipeline.build.timeout
+        script.echo("${timeout.toString()}")
+        script.echo("${config.toString()}")
+        return new DeployPipeline(script)
     }
 
-    protected Pipeline startPipeline(Class<?> cls) {
+    protected Pipeline startPipeline() {
         cls = new Class<>(script);
         def timeout = script.constants.pipeline.build.timeout
         script.echo("${timeout.toString()}")
