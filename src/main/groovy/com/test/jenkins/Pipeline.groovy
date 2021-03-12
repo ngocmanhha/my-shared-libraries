@@ -27,7 +27,7 @@ abstract class Pipeline implements Serializable {
     }
 
     static Pipeline resolve(Script script) {
-        construct(script, [])
+        construct(script, [:])
     }
 
 //    static Pipeline resolve(Script script) {
