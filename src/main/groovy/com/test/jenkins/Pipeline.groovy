@@ -42,7 +42,7 @@ abstract class Pipeline implements Serializable {
         Map configuration = [:]
 
         configuration.pipelineDefinition = config
-        configuration.build = prepareBuildVariables(script, configuration)
+//        configuration.build = prepareBuildVariables(script, configuration)
         Map configs = [
             constants: prepareBuildVariables(script, configuration)
         ]
