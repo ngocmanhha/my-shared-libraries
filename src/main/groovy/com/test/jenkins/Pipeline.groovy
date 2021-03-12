@@ -1,8 +1,8 @@
 package com.test.jenkins
 
 abstract class Pipeline implements Serializable {
-    Script script
-    Map config = [
+    private static Script script
+    private static Map config = [
         constants: [
             pipeline: [
                 build: [
