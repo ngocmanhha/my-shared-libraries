@@ -1,8 +1,8 @@
 package com.test.jenkins
 
 abstract class Pipeline implements Serializable {
-    private static Script script
-    private static Map config = [
+    Script script
+    Map config = [
         constants: [
             pipeline: [
                 build: [
@@ -27,37 +27,44 @@ abstract class Pipeline implements Serializable {
     }
 
     static Pipeline resolve(Script script, Map config) {
-        def configFile = ".jenkins-ci.yaml"
-        Map configs = script.readYaml(text: script.readFile(file: configFile))
-        script.echo("Loaded config yaml: ${configs}")
-        config.constants.pipeline = configs
-        script.echo(config)
+//        def configFile = ".jenkins-ci.yaml"
+//        Map configs = script.readYaml(text: script.readFile(file: configFile))
+//        script.echo("Loaded config yaml: ${configs}")
+//        config.constants.pipeline = configs
+//        script.echo(config)
         construct(script, config)
     }
 
     static Pipeline resolve(Script script) {
-        def configFile = ".jenkins-ci.yaml"
-        Map configs = script.readYaml(text: script.readFile(file: configFile))
-        script.echo("Loaded config yaml: ${configs}")
-        this.config.constants.pipeline = configs
-        script.echo(this.config.toString())
         construct(script)
     }
 
     private static Pipeline construct(Script script, Map config) {
         // resolve pipeline type
         script.echo("Pipeline type")
-        def timeout = script.constants.pipeline.build.timeout
-        script.echo("${timeout.toString()}")
-        script.echo("${config.toString()}")
-        return new DeployPipeline(script, config)
+        Map configuration = [:]
+
+        configuration.pipelineDefinition = config
+//        configuration.build = prepareBuildVariables(script, configuration)
+        return new DeployPipeline(script, configuration)
+    }
+
+    private static Map prepareBuildVariables(Script script, Map configuration) {
+        script.node('master') {
+            script.stage('prepare-build-variables') {
+                Map scmVars = script.retryCheckout(script.scm)
+                def configFile = ".jenkins-ci.yaml"
+                Map configs = script.readYaml(text: script.readFile(file: configFile))
+                script.echo("Loaded config yaml: ${configs}")
+//                script.echo(config)
+//                return new
+            }
+        }
     }
 
     private static Pipeline construct(Script script) {
         // resolve pipeline type
         script.echo("Pipeline type")
-        def timeout = this.config.constants.pipeline.build.timeout
-        script.echo("${timeout.toString()}")
         return new DeployPipeline(script)
     }
 
