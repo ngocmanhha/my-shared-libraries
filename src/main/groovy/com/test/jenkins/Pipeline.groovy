@@ -1,6 +1,6 @@
 package com.test.jenkins
 
-import javax.security.auth.login.Configuration
+//import javax.security.auth.login.Configuration
 
 abstract class Pipeline implements Serializable {
     Script script
@@ -119,7 +119,7 @@ abstract class Pipeline implements Serializable {
             return TimeoutUnit.valueOf(timeoutUnit)
         }
         catch (Exception e) {
-            script.println(e.getMessage())
+            script.echo(e.getMessage())
             return false
         }
     }

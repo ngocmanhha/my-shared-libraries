@@ -5,7 +5,7 @@ import com.cloudbees.groovy.cps.NonCPS
 
 @InheritConstructors
 class DeployPipeline extends Pipeline {
-
+    int waitRetries = 10
     DeployPipeline(Script script) {
         super(script)
     }
@@ -17,59 +17,8 @@ class DeployPipeline extends Pipeline {
     @Override
     void run() {
         withTestFailureHandling {
-            initPhase()
-            testPhase()
-            buildPhase()
             deployPhase()
             nextPhase()
-        }
-    }
-
-    def initPhase() {
-        script.stage("Prepare") {
-//            script.retry(count: 3) {
-//                script.echo(a)
-//            }
-            script.echo("Hello, world")
-            script.echo("The value of GlobalVars is : ${GlobalVars.name}")
-//            script.node('master') {
-//                Map scmVars = script.checkout(script.scm)
-//            }
-        }
-    }
-
-    def testPhase() {
-        script.stage("Test") {
-            def test = [:]
-            test["test-1"] = {
-                script.stage("test1") {
-                    script.echo("1")
-                    script.echo("2")
-                }
-            }
-            test["test-2"] = {
-                script.stage("test2") {
-                    script.echo("3")
-                    script.echo("4")
-                }
-            }
-
-            script.parallel(test)
-        }
-    }
-
-    def buildPhase() {
-        script.stage("Build") {
-            def test = [:]
-            ["1", "2", "3", "4"].each {item ->
-                test["build-${item}"] = {
-                    displayInfo(["${item}"])
-                }
-            }
-            test["build-image"] = {
-                buildDockerImage()
-            }
-            script.parallel(test)
         }
     }
 
@@ -103,23 +52,108 @@ class DeployPipeline extends Pipeline {
         script.sh(script: "docker rmi --force ${imageId}")
     }
 
+    boolean deployStatus() {
+        for (int i = 0; i < waitRetries; i++) {
+            boolean status = getStatus()
+            if (status != null) {
+                script.echo("Execute ${status}")
+                if (!status) {
+                    script.catchError(stageResult: 'FAILURE', buildResult: 'FAILURE') {
+                        script.error("Here => ${status}")
+                    }
+                }
+                return status
+            }
+            script.echo("sleep 10")
+            script.sleep(10)
+        }
+        script.error("Here - timeout => ${status}")
+        return false
+    }
+
     def deployPhase() {
-        script.stage('Deploy') {
-            def test = [:]
-            test['deploy-1'] = {
-                script.echo("1")
-                script.echo("2")
+        Map<Integer, Closure> revertActions = [:]
+        revertActions[0] = {
+            script.stage("revert changes"){
+                script.echo("Reverting ....")
             }
-            test['deploy-2'] = {
-                script.echo("3")
-                script.echo("4")
+        }
+
+        tryWithRevert({
+            script.stage('Deploy') {
+                script.node('master') {
+                    def waitActions = [:]
+                    def waitResults = [:]
+                    int jobNumbers = 10
+                    for (int index = 0; index < jobNumbers; index++) {
+                        def actionName = "job-${index + 1}"
+                        waitActions[actionName] = {
+                            waitResults[actionName] = deployStatus()
+                        }
+                    }
+                    script.parallel(waitActions)
+                    boolean releasesOk = true
+                    List<String> deploymentTargets = waitResults.keySet().toList()
+                    for (int i = 0; i < deploymentTargets.size(); i++) {
+                        String target = deploymentTargets[i]
+                        Boolean result = waitResults[target]
+                        if (result != Boolean.TRUE) {
+                            script.echo("Release ${target} failed with result ${result}.")
+                        }
+                        releasesOk &= result
+                    }
+
+                    if (!releasesOk) {
+                        throw new PipelineException("At least one deployment failed, aborting the pipeline")
+                    }
+                    script.echo("${deploymentTargets.size()} releases deployed successfully.")
+                }
             }
-            script.parallel(test)
+        }, revertActions)
+    }
+
+    private def tryWithRevert(Closure action, Map<Integer, Closure> revertActions) {
+        try {
+            action.call()
+        } catch (Exception e) {
+            script.echo("Reverting actions - exception occurred: ${e}.")
+            List<Integer> keys = revertActions.keySet().sort()
+            script.echo("Executing revert actions: ${keys}")
+            for (int i = 0; i < keys.size(); i++) {
+                Integer action_order = keys[i]
+                try {
+                    script.echo("Executing revert action ${action_order}")
+                    Closure revert_action = revertActions[action_order]
+                    revert_action.call()
+                    script.echo("Revert action ${action_order} done")
+                } catch (Exception ex) {
+                    script.echo("Revert action ${action_order} failed with exception ${ex} - check the log.")
+                }
+            }
+            if (e instanceof TestFailureException) {
+                // propagate test failure as such
+                throw e
+            }
+            throw new PipelineException("Aborting pipeline - failed with exception ${e}", e)
         }
     }
 
     def displayInfo(List arr) {
         arr.each { item -> script.echo(item) }
+    }
+
+    def getStatus() {
+        def value = Math.ceil(Math.random() * 10)
+        if (value < 5) {
+            return null
+        }
+        else if (value >= 5 && value <= 7) {
+            return false
+        }
+        else if (value > 7) {
+            return true
+        }
+        return null
     }
 
     @NonCPS
