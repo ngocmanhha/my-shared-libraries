@@ -73,13 +73,10 @@ class DeployPipeline extends Pipeline {
             }
         } catch(Exception exp) {
             markError += exp.getMessage()
-        }
-        finally {
-            if (markError) {
-                script.catchError(stageResult: 'FAILURE') {
-//                    script.error("At least one deployment failed, aborting the pipeline - Here")
-                    script.echo("At least one deployment failed, aborting the pipeline - Here")
-                }
+            script.catchError(stageResult: 'FAILURE', buildResult: 'FAILURE') {
+                script.echo("FAILURE")
+//                    script.error("At least one deployment failed, aborting the pipeline")
+//                    script.echo("At least one deployment failed, aborting the pipeline - Here")
             }
         }
 //        for (int i = 0; i < waitRetries; i++) {
@@ -91,9 +88,9 @@ class DeployPipeline extends Pipeline {
 //            }
 //            script.sleep(10)
 //        }
-//        script.catchError(stageResult: 'Failure') {
-//            script.error("Execute ${job} - timeout => Failed")
-//        }
+        script.catchError(stageResult: 'Failure') {
+            script.error("Execute ${job} - timeout => Failed")
+        }
         return false
     }
 
