@@ -72,8 +72,11 @@ class DeployPipeline extends Pipeline {
                 script.sleep(10)
             }
         } catch(Exception exp) {
-            script.catchError(stageResult: null) {
-                script.error("FAILURE")
+            script.catchError(stageResult: "FAILURE") {
+//            script.catchError(stageResult: null) {
+//                script.error("FAILURE")
+                script.echo("FAILURE")
+                return false
             }
         }
         script.catchError(stageResult: 'Failure') {
