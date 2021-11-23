@@ -6,6 +6,7 @@ import com.cloudbees.groovy.cps.NonCPS
 @InheritConstructors
 class DeployPipeline extends Pipeline {
     int waitRetries = 10
+
     DeployPipeline(Script script) {
         super(script)
     }
@@ -55,13 +56,15 @@ class DeployPipeline extends Pipeline {
     boolean deployStatus(def job) {
         def time = new Date().getTime()
         def even = time % 2 == 0
+        List markError = []
         try {
             for (int i = 0; i < waitRetries; i++) {
                 def (boolean status, Map results) = getStatus(even)
                 String message = "- Execute ${job} => ${status} \n- Here => ${results}"
                 if (status != null) {
                     if (!status) {
-                        script.error(message)
+//                        script.error(message)
+                        throw new PipelineException(message)
                     }
                     script.echo(message)
                     return status
@@ -69,7 +72,15 @@ class DeployPipeline extends Pipeline {
                 script.sleep(10)
             }
         } catch(Exception exp) {
-            throw new StageFailureException(exp.getMessage())
+            markError += exp.getMessage()
+        }
+        finally {
+            if (markError) {
+                script.catchError(stageResult: 'FAILURE') {
+//                    script.error("At least one deployment failed, aborting the pipeline - Here")
+                    script.echo("At least one deployment failed, aborting the pipeline - Here")
+                }
+            }
         }
 //        for (int i = 0; i < waitRetries; i++) {
 //            def (boolean status, Map results) = getStatus(even)
