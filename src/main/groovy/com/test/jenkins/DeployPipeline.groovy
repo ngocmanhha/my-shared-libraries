@@ -61,8 +61,7 @@ class DeployPipeline extends Pipeline {
                 String message = "- Execute ${job} => ${status} \n- Here => ${results}"
                 if (status != null) {
                     if (!status) {
-                        throw new PipelineException(message)
-//                        script.error(message)
+                        script.error(message)
                     }
                     script.echo(message)
                     return status
@@ -70,13 +69,20 @@ class DeployPipeline extends Pipeline {
                 script.sleep(10)
             }
         } catch(Exception exp) {
-            script.echo(exp.getMessage())
-            return false
-//            throw new PipelineException(exp.getMessage())
+            throw new StageFailureException(exp.getMessage())
         }
-        script.catchError(stageResult: 'Failure') {
-            script.error("Execute ${job} - timeout => Failed")
-        }
+//        for (int i = 0; i < waitRetries; i++) {
+//            def (boolean status, Map results) = getStatus(even)
+//            String message = "- Execute ${job} => ${status} \n- Here => ${results}"
+//            if (status != null) {
+//                script.echo(message)
+//                return status
+//            }
+//            script.sleep(10)
+//        }
+//        script.catchError(stageResult: 'Failure') {
+//            script.error("Execute ${job} - timeout => Failed")
+//        }
         return false
     }
 
@@ -107,7 +113,7 @@ class DeployPipeline extends Pipeline {
                         String target = deploymentTargets[i]
                         Boolean result = waitResults[target]
                         if (result != Boolean.TRUE) {
-                            script.echo("Release ${target} failed with result ${result}.")
+                            script.error("Release ${target} failed with result ${result}.")
                         }
                         releasesOk &= result
                     }
@@ -143,7 +149,11 @@ class DeployPipeline extends Pipeline {
                 // propagate test failure as such
                 throw e
             }
-            throw new PipelineException("Aborting pipeline - failed with exception ${e}", e)
+            else if (e instanceof StageFailureException) {
+                script.echo(e.getMessage())
+            } else {
+                throw new PipelineException("Aborting pipeline - failed with exception ${e}", e)
+            }
         }
     }
 
