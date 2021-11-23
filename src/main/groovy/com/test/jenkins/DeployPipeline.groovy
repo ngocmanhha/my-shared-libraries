@@ -63,7 +63,6 @@ class DeployPipeline extends Pipeline {
                 String message = "- Execute ${job} => ${status} \n- Here => ${results}"
                 if (status != null) {
                     if (!status) {
-//                        script.error(message)
                         throw new PipelineException(message)
                     }
                     script.echo(message)
@@ -71,14 +70,15 @@ class DeployPipeline extends Pipeline {
                 }
                 script.sleep(10)
             }
-        } catch(Exception exp) {
-            script.catchError(stageResult: "FAILURE") {
-                script.error(exp.getMessage())
-            }
-            return false
+            return setStageResultFailure("Execute ${job} \n- timeout => Failed")
+        } catch (Exception exp) {
+            return setStageResultFailure(exp.getMessage())
         }
-        script.catchError(stageResult: 'Failure') {
-            script.error("Execute ${job} - timeout => Failed")
+    }
+
+    private boolean setStageResultFailure(String message) {
+        script.catchError(stageResult: 'FAILURE') {
+            script.error(message)
         }
         return false
     }
