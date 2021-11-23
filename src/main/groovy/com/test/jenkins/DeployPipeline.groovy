@@ -72,12 +72,12 @@ class DeployPipeline extends Pipeline {
                 script.sleep(10)
             }
         } catch(Exception exp) {
-            script.catchError(stageResult: "FAILURE") {
-//            script.catchError(stageResult: null) {
+//            script.catchError(stageResult: "FAILURE") {
+            script.catchError(stageResult: null) {
 //                script.error("FAILURE")
                 script.echo("FAILURE")
-                return false
             }
+            return false
         }
         script.catchError(stageResult: 'Failure') {
             script.error("Execute ${job} - timeout => Failed")
