@@ -52,22 +52,31 @@ class DeployPipeline extends Pipeline {
         script.sh(script: "docker rmi --force ${imageId}")
     }
 
-    boolean deployStatus() {
-        for (int i = 0; i < waitRetries; i++) {
-            boolean status = getStatus()
-            if (status != null) {
-                script.echo("Execute ${status}")
-                if (!status) {
-                    script.catchError(stageResult: 'FAILURE', buildResult: 'FAILURE') {
-                        script.error("Here => ${status}")
+    boolean deployStatus(def job) {
+        def time = new Date().getTime()
+        def even = time % 2 == 0
+        try {
+            for (int i = 0; i < waitRetries; i++) {
+                def (boolean status, Map results) = getStatus(even)
+                String message = "- Execute ${job} => ${status} \n- Here => ${results}"
+                if (status != null) {
+                    if (!status) {
+                        throw new PipelineException(message)
+//                        script.error(message)
                     }
+                    script.echo(message)
+                    return status
                 }
-                return status
+                script.sleep(10)
             }
-            script.echo("sleep 10")
-            script.sleep(10)
+        } catch(Exception exp) {
+            script.echo(exp.getMessage())
+            return false
+//            throw new PipelineException(exp.getMessage())
         }
-        script.error("Here - timeout => ${status}")
+        script.catchError(stageResult: 'Failure') {
+            script.error("Execute ${job} - timeout => Failed")
+        }
         return false
     }
 
@@ -88,7 +97,7 @@ class DeployPipeline extends Pipeline {
                     for (int index = 0; index < jobNumbers; index++) {
                         def actionName = "job-${index + 1}"
                         waitActions[actionName] = {
-                            waitResults[actionName] = deployStatus()
+                            waitResults[actionName] = deployStatus(actionName)
                         }
                     }
                     script.parallel(waitActions)
@@ -142,18 +151,18 @@ class DeployPipeline extends Pipeline {
         arr.each { item -> script.echo(item) }
     }
 
-    def getStatus() {
+    def getStatus(even) {
         def value = Math.ceil(Math.random() * 10)
-        if (value < 5) {
-            return null
+        if (even || value < 5) {
+            return [null, [:]]
         }
         else if (value >= 5 && value <= 7) {
-            return false
+            return [false, ["Deploy Status": "Failed"]]
         }
         else if (value > 7) {
-            return true
+            return [true, ["Deploy Status": "Succeeded"]]
         }
-        return null
+        return [null, ["Deploy": "Timeout - Please double check again"]]
     }
 
     @NonCPS
