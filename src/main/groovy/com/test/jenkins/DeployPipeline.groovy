@@ -72,22 +72,10 @@ class DeployPipeline extends Pipeline {
                 script.sleep(10)
             }
         } catch(Exception exp) {
-            markError += exp.getMessage()
             script.catchError(stageResult: 'FAILURE', buildResult: 'FAILURE') {
                 script.echo("FAILURE")
-//                    script.error("At least one deployment failed, aborting the pipeline")
-//                    script.echo("At least one deployment failed, aborting the pipeline - Here")
             }
         }
-//        for (int i = 0; i < waitRetries; i++) {
-//            def (boolean status, Map results) = getStatus(even)
-//            String message = "- Execute ${job} => ${status} \n- Here => ${results}"
-//            if (status != null) {
-//                script.echo(message)
-//                return status
-//            }
-//            script.sleep(10)
-//        }
         script.catchError(stageResult: 'Failure') {
             script.error("Execute ${job} - timeout => Failed")
         }
@@ -121,7 +109,7 @@ class DeployPipeline extends Pipeline {
                         String target = deploymentTargets[i]
                         Boolean result = waitResults[target]
                         if (result != Boolean.TRUE) {
-                            script.error("Release ${target} failed with result ${result}.")
+                            script.echo("Release ${target} failed with result ${result}.")
                         }
                         releasesOk &= result
                     }
