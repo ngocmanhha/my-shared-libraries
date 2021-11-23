@@ -72,10 +72,8 @@ class DeployPipeline extends Pipeline {
                 script.sleep(10)
             }
         } catch(Exception exp) {
-//            script.catchError(stageResult: "FAILURE") {
-            script.catchError(stageResult: null) {
-//                script.error("FAILURE")
-                script.echo("FAILURE")
+            script.catchError(stageResult: "FAILURE") {
+                script.error(exp.getMessage())
             }
             return false
         }
@@ -148,11 +146,11 @@ class DeployPipeline extends Pipeline {
                 // propagate test failure as such
                 throw e
             }
-            else if (e instanceof StageFailureException) {
-                script.echo(e.getMessage())
-            } else {
-                throw new PipelineException("Aborting pipeline - failed with exception ${e}", e)
-            }
+//            else if (e instanceof StageFailureException) {
+//                script.echo(e.getMessage())
+//            } else {
+//            }
+            throw new PipelineException("Aborting pipeline - failed with exception ${e}", e)
         }
     }
 
