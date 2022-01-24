@@ -18,7 +18,6 @@ class JiraUtils {
         this.constants = constants
     }
 
-    @NonCPS
     String doCreateIssue(String username, String password, String project, String issueType, String summary,
                          String description, String priority, List<String> labels) {
         /*def labelsString = '['+labels.collect { "\"$it\"" }.join( ',' ) +']'
@@ -32,10 +31,12 @@ class JiraUtils {
                 .field(Field.LABELS, labelsString)
                 .execute().toString();
         return result*/
-        def labelsString = '['+labels.collect { "\"$it\"" }.join( ',' ) +']'
-        def jiraUrl = constants.jira.serverUrl as String
-        //Workaround: The current version of groovy doens't work well with creating issue
-        def executeScript = """\
+        script.stage('Deploy') {
+            script.node('master') {
+                def labelsString = '['+labels.collect { "\"$it\"" }.join( ',' ) +']'
+                def jiraUrl = constants.jira.serverUrl as String
+                //Workaround: The current version of groovy doens't work well with creating issue
+                def executeScript = """\
 @Grab(group = "net.rcarz", module = "jira-client", version = "0.5")
 import net.rcarz.jiraclient.*
 
@@ -51,7 +52,9 @@ result = client.createIssue("${project}", "${issueType}")
         .execute().toString();
 println(result)
 """
-        script.echo(executeScript)
-        return script.sh(script: "/bin/groovy -e '${executeScript}'", returnStdout: true).trim()
+                script.echo(executeScript)
+                return script.sh(script: "/var/jenkins_home/groovy-2.4.12/bin/groovy -e '${executeScript}'", returnStdout: true).trim()
+            }
+        }
     }
 }
