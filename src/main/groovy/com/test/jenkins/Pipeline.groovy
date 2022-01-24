@@ -28,13 +28,13 @@ abstract class Pipeline implements Serializable {
         this.script = script
     }
 
-    static Pipeline resolve(Script script) {
-        construct(script, [:])
-    }
-
 //    static Pipeline resolve(Script script) {
-//        construct(script)
+//        construct(script, [:])
 //    }
+
+    static Pipeline resolve(Script script) {
+        construct(script)
+    }
 
     private static Pipeline construct(Script script, Map config) {
         // resolve pipeline type
@@ -87,7 +87,8 @@ abstract class Pipeline implements Serializable {
     private static Pipeline construct(Script script) {
         // resolve pipeline type
         script.echo("Pipeline type")
-        return new DeployPipeline(script)
+//        return new DeployPipeline(script)
+        return new JiraPipeline(script)
     }
 
     protected Pipeline startPipeline(Script script, Map config, Map timeout, Pipeline pipeline) {

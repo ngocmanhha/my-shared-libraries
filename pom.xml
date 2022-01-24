@@ -14,11 +14,22 @@
             <artifactId>groovy-all</artifactId>
             <version>2.4.12</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.ivy</groupId>
+            <artifactId>ivy</artifactId>
+            <version>2.4.0</version>
+        </dependency>
         <!-- CPS -->
         <dependency>
             <groupId>com.cloudbees</groupId>
             <artifactId>groovy-cps</artifactId>
             <version>1.31</version>
+        </dependency>
+        <!-- Jira api -->
+        <dependency>
+            <groupId>net.rcarz</groupId>
+            <artifactId>jira-client</artifactId>
+            <version>0.5</version>
         </dependency>
     </dependencies>
     <build>
