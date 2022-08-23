@@ -88,7 +88,7 @@ abstract class Pipeline implements Serializable {
         // resolve pipeline type
         script.echo("Pipeline type")
 //        return new DeployPipeline(script)
-        return new JiraPipeline(script)
+        return new TestPipeline(script)
     }
 
     protected Pipeline startPipeline(Script script, Map config, Map timeout, Pipeline pipeline) {
