@@ -31,6 +31,17 @@
             <artifactId>jira-client</artifactId>
             <version>0.5</version>
         </dependency>
+        <!-- GitHub api -->
+        <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-github</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.1</version>
+        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>src/main/groovy</sourceDirectory>
